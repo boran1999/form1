@@ -1,24 +1,43 @@
 <?php
-$errors=array(
-	'name' => '',
-	'sname' => '',
-	'email' => '',
-	'phone' => '',
-);
-	if (!empty($_POST)){
-		if(empty($_POST['name'])){
-			$errors['name']='Введите имя!';
-		}
-		if(empty($_POST['sname'])){
-			$errors['sname']='Введите фамилию!';
-		}
-		if(empty($_POST['email'])){
-			$errors['email']='Введите email!';
-		}
-		if(empty($_POST['phone'])){
-			$errors['phone']='Введите номер телефона!';
-		}
+
+$error = array( 
+); 
+
+if (!empty($_POST)) 
+{ 
+	$name = isset($_POST['name']) ? trim($_POST['name']) : null; 
+	$sname = isset($_POST['sname']) ? trim($_POST['sname']) : null; 
+	$email = isset($_POST['email']) ? trim($_POST['email']) : null; 
+	$phone = isset($_POST['phone']) ? trim($_POST['phone']) : null; 
+	$top = isset($_POST['top']) ? trim($_POST['top']) : null; 
+	$pay = isset($_POST['paym']) ? trim($_POST['paym']) : null; 
+
+	foreach (['name', 'lastname', 'email', 'phone', 'topic', 'pay'] as $key) 
+	{ 
+		if(empty($$key)) 
+		{ 
+			$error[$key] = true; 
+		} 
+	} 
+} 
+if ($error)  { 
+	$filename = date('Y-m-d-H-i-s') . '-' . rand(010, 99) . '.txt'; 
+	$SoglRas = isset($_POST['jel']) ? $_POST['jel'] : 'no'; 
+	$contents = '<?php'."\n".'return'. var_export([
+		'name' => $name, 
+		'secondname' => $sname, 
+		'email' => $email, 
+		'topic' => $top, 
+		'pay' => $pay, 
+		'mailing' => $SoglRas,
+	],true); 
+	$dir = "logs"; 
+	if(!is_dir($dir)) {
+    	mkdir($dir, 0777, true);
 	}
+	file_put_contents("logs\\".$filename, $contents); 
+	header('Location: form1.php');
+}
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -81,28 +100,6 @@ $errors=array(
 	<input type="checkbox" name="jel" value="yes"><font color="blue">Хотите получать рассылку о конференции?</font><br>
    <p><input type="submit" value="Отправить данные"></p>
   </form>
- <?php
- if (!empty($_POST['name']) && !empty($_POST['sname']) && !empty($_POST['email']) && !empty($_POST['phone'])) { 
-	$filename = date('Y-m-d-H-i-s') . '-' . rand(010, 99) . '.txt'; 
-	$name = $_POST['name']; 
-	$sname = $_POST['sname']; 
-	$email = $_POST['email']; 
-	$phone = $_POST['phone']; 
-	$top = $_POST['top']; 
-	$pay = $_POST['paym']; 
-	$SoglRas = isset($_POST['jel']) ? $_POST['jel'] : 'no'; 
-	$contents = '<?php'."\n".'return'. var_export([
-		'name' => $name, 
-		'secondname' => $sname, 
-		'email' => $email, 
-		'topic' => $top, 
-		'pay' => $pay, 
-		'mailing' => $SoglRas,
-	],true); 
-	file_put_contents("logs\\".$filename, $contents); 
-	header('Location: form.php');
-}
- ?>
 <div>
 </div>
 </body>
