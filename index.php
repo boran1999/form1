@@ -20,7 +20,7 @@ if (!empty($_POST))
 		} 
 	} 
 } 
-if ($error)  { 
+if (empty($error))  { 
 	$filename = date('Y-m-d-H-i-s') . '-' . rand(010, 99) . '.txt'; 
 	$SoglRas = isset($_POST['jel']) ? $_POST['jel'] : 'no'; 
 	$contents = '<?php'."\n".'return'. var_export([
